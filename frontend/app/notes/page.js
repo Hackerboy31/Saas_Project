@@ -22,7 +22,7 @@ export default function NotesPage() {
 
   const fetchNotes = async () => {
     try {
-      const res = await fetch("http://localhost:3000/notes", {
+      const res = await fetch("https://saas-project-backe.onrender.com/notes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -37,7 +37,7 @@ export default function NotesPage() {
   const createNote = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch("http://localhost:3000/notes", {
+    const res = await fetch("https://saas-project-backe.onrender.com/notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function NotesPage() {
   const updateNote = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`http://localhost:3000/notes/${editingNote.id}`, {
+      await fetch(`https://saas-project-backe.onrender.com/${editingNote.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function NotesPage() {
   };
 
   const deleteNote = async (id) => {
-    await fetch(`http://localhost:3000/notes/${id}`, {
+    await fetch(`https://saas-project-backe.onrender.com/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
