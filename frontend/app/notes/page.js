@@ -35,55 +35,62 @@ export default function NotesPage() {
   };
 
   const createNote = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch("https://saas-project-backe.onrender.com/notes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ title, body }),
-    });
-
-    if (!res.ok) {
-      const errorData = await res.json();
-      if (errorData.canUpgrade) {
-        // Show popup and redirect to /pro on OK
-        if (window.confirm("You have reached the FREE plan limit (3 notes). Upgrade to Pro?")) {
-          router.push("/pro"); // Redirect to Pro page
-        }
-      } else {
-        alert(errorData.error || "Failed to add note");
-      }
-      return;
-    }
-
-    // Refresh notes after adding
-    fetchNotes();
-    setTitle("");
-    setBody("");
-
-  } catch (err) {
-    console.error("Failed to create note", err);
-  }
-};
-
-
-  const updateNote = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`https://saas-project-backe.onrender.com/${editingNote.id}`, {
-        method: "PUT",
+      const res = await fetch("https://saas-project-backe.onrender.com/notes", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title: editingNote.title,
-          body: editingNote.body, // ✅ use body
-        }),
+        body: JSON.stringify({ title, body }),
       });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        if (errorData.canUpgrade) {
+          // Show popup and redirect to /pro on OK
+          if (
+            window.confirm(
+              "You have reached the FREE plan limit (3 notes). Upgrade to Pro?"
+            )
+          ) {
+            router.push("/pro"); // Redirect to Pro page
+          }
+        } else {
+          alert(errorData.error || "Failed to add note");
+        }
+        return;
+      }
+
+      // Refresh notes after adding
+      fetchNotes();
+      setTitle("");
+      setBody("");
+    } catch (err) {
+      console.error("Failed to create note", err);
+    }
+  };
+
+  const updateNote = async (e) => {
+    e.preventDefault();
+    try {
+      // Update Note
+      await fetch(
+        `https://saas-project-backe.onrender.com/notes/${editingNote.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: editingNote.title,
+            body: editingNote.body,
+          }),
+        }
+      );
+
       setEditingNote(null);
       fetchNotes();
     } catch (err) {
@@ -92,12 +99,14 @@ export default function NotesPage() {
   };
 
   const deleteNote = async (id) => {
-    await fetch(`https://saas-project-backe.onrender.com/${id}`, {
+    // Delete Note
+    await fetch(`https://saas-project-backe.onrender.com/notes/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
     fetchNotes();
   };
 
